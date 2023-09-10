@@ -14,6 +14,10 @@ class TransformersLLM(LMTPModel):
             from auto_gptq import AutoGPTQForCausalLM
             print("[Loading", self.model_identifier, "with", f"AutoGPTQForCausalLM.from_quantized({self.model_identifier}, {str(self.model_args)[1:-1]})]", flush=True)
             self.model = AutoGPTQForCausalLM.from_quantized(self.model_identifier, **self.model_args)
+        if self.model_args.pop("loader", None) == "petals":
+            from petals import AutoDistributedModelForCausalLM
+            print("[Loading", self.model_identifier, "with", f"AutoDistributedModelForCausalLM({self.model_identifier}, {str(self.model_args)[1:-1]})]", flush=True)
+            self.model = AutoDistributedModelForCausalLM.from_pretrained(self.model_identifier, **self.model_args)
         else:
             from transformers import AutoModelForCausalLM
             print("[Loading", self.model_identifier, "with", f"AutoModelForCausalLM.from_pretrained({self.model_identifier}, {str(self.model_args)[1:-1]})]", flush=True)
